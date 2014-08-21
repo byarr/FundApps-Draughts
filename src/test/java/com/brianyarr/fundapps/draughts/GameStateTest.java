@@ -15,10 +15,7 @@ public class GameStateTest {
 	public void testBoardInit() {
 		GameState initialState = new GameState();
 		assertEquals(Player.BLACK, initialState.getNextPlayer());
-		
-		System.out.println(initialState.boardToString());
-		
-		
+
 		//top left is empty, next one along is black
 		assertEquals(null, initialState.getPieceAt(0, 0));
 		assertEquals(Piece.BLACK_MAN, initialState.getPieceAt(0, 1));
@@ -92,6 +89,8 @@ public class GameStateTest {
 			assertEquals(Player.WHITE, initialState.getNextPlayer());
 		}
 	}
+	
+	
 	
 
 }
