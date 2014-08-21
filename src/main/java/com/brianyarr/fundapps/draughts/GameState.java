@@ -38,21 +38,21 @@ public class GameState {
 		return nextPlayer;
 	}
 	
-	public void doMove(Move m) {
+	public MoveResult doMove(Move m) {
 		if (!m.player.equals(nextPlayer)) {
-			throw new IllegalArgumentException(m.player + " tried to move but it is " + nextPlayer + " turn.");
+			return MoveResult.error(m.player + " tried to move but it is " + nextPlayer + " turn.");
 		}
 		
 		Piece movingPiece = getPieceAt(m.from);
 		if (movingPiece == null) {
-			throw new IllegalArgumentException(m.player + " tried to move a piece that doesn't exist at " + m.from);
+			return MoveResult.error(m.player + " tried to move a piece that doesn't exist at " + m.from);
 		}
 		else if (!movingPiece.owner.equals(m.player)) {
-			throw new IllegalArgumentException(m.player + " tried to move a piece owned by " + movingPiece.owner);
+			return MoveResult.error(m.player + " tried to move a piece owned by " + movingPiece.owner);
 		}
 		
 		if(getPieceAt(m.to) != null) {
-			throw new IllegalArgumentException("Trying to move to an occupied position " + m.to);
+			return MoveResult.error("Trying to move to an occupied position " + m.to);
 		}
 		
 		//update board state
@@ -60,6 +60,8 @@ public class GameState {
 		//check for win condition?
 		
 		nextPlayer = nextPlayer.nextPlayer();
+		
+		return MoveResult.success();
 	}
 	
 	String boardToString() {

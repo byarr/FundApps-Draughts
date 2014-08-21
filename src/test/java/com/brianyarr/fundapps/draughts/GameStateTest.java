@@ -69,10 +69,10 @@ public class GameStateTest {
 		
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
+	
 	public void testWhiteCantGoFirst() {
 		GameState initialState = new GameState();
-		initialState.doMove(new Move(Player.WHITE, new Position(5,0), new Position(4,1)));
+		assertFalse(initialState.doMove(new Move(Player.WHITE, new Position(5,0), new Position(4,1))).isSuccess());
 	}
 	
 	@Test
@@ -88,7 +88,7 @@ public class GameStateTest {
 		
 		for (Move m : legalMoves) {
 			GameState initialState = new GameState();
-			initialState.doMove(m);
+			assertEquals(true, initialState.doMove(m).isSuccess());
 			assertEquals(Player.WHITE, initialState.getNextPlayer());
 		}
 	}
