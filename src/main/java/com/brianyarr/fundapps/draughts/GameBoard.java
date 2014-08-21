@@ -46,18 +46,41 @@ class GameBoard {
 			return MoveResult.error("Trying to move to an occupied position " + m.to);
 		}
 		
-		final boolean validColMove = Math.abs(m.from.colIdx - m.to.colIdx) == 1;
-		final boolean validRowMove;
-		if (movingPiece.isKing) {
-			validRowMove = Math.abs(m.from.rowIdx - m.to.rowIdx) == 1;
-		}
-		else {
-			int rowMoveDir = movingPiece.owner.equals(Player.BLACK) ? -1 : +1;
-			validRowMove = m.from.rowIdx + rowMoveDir != m.to.rowIdx;
+		//moves can either be one square, or two if they are over an opposing piece
+		int colMoves = Math.abs(m.from.colIdx - m.to.colIdx);
+		int rowMoves = m.from.rowIdx - m.to.rowIdx;
+		//moving diagonally means row and col moves by same amount
+		if (colMoves != Math.abs(rowMoves)) {
+			return MoveResult.error("Invalid move.");
 		}
 		
-		if (!validColMove || !validRowMove) {
-			return MoveResult.error("Move was invalid.");
+		if (!movingPiece.isKing) {
+			//normal pieces can move in specific directions
+			int rowMoveDir = movingPiece.owner.equals(Player.BLACK) ? -1 : +1;
+			if (Math.signum(rowMoves) != rowMoveDir) {
+				return MoveResult.error("Invalid move.");
+			}
+		}
+		
+		if (colMoves == 1) {
+			//already checked everything?
+		}
+		else if (colMoves == 2) {
+			//check row moves is 2 in valid dir and that we have jumped over opposing player
+			Position jumpedPos = new Position((m.from.rowIdx + m.to.rowIdx)/2, (m.from.colIdx + m.to.colIdx) / 2);
+			Piece jumpedPiece = getPieceAt(jumpedPos);
+			if (jumpedPiece == null) {
+				return MoveResult.error("Can't jump and empty square.");
+			}
+			else if (jumpedPiece.owner.equals(movingPiece.owner)) {
+				return MoveResult.error("Can't jump your own peices.");
+			}
+			else {
+				setPieceAt(null, jumpedPos);
+			}
+		}
+		else {
+			return MoveResult.error("Tried to move invalid number of columns.");
 		}
 		
 		setPieceAt(null, m.from);
