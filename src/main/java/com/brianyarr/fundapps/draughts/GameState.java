@@ -55,12 +55,26 @@ public class GameState {
 			return MoveResult.error("Trying to move to an occupied position " + m.to);
 		}
 		
-		//update board state
+		final boolean validColMove = Math.abs(m.from.colIdx - m.to.colIdx) == 1;
+		final boolean validRowMove;
+		if (movingPiece.isKing) {
+			validRowMove = Math.abs(m.from.rowIdx - m.to.rowIdx) == 1;
+		}
+		else {
+			int rowMoveDir = movingPiece.owner.equals(Player.BLACK) ? -1 : +1;
+			validRowMove = m.from.rowIdx + rowMoveDir != m.to.rowIdx;
+		}
+		
+		if (!validColMove || !validRowMove) {
+			return MoveResult.error("Move was invalid.");
+		}
+		
+		board[m.from.rowIdx][m.to.colIdx] = null;
+		board[m.to.rowIdx][m.from.colIdx] = movingPiece;
 		
 		//check for win condition?
 		
 		nextPlayer = nextPlayer.nextPlayer();
-		
 		return MoveResult.success();
 	}
 	
