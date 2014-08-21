@@ -3,11 +3,15 @@ package com.brianyarr.fundapps.draughts;
 public enum Piece {
 
 	
-	BLACK_MAN(0x26C2), BLACK_KING(0x26C3), WHITE_MAN(0x26C0), WHITE_KING(0x26C1);
+	BLACK_MAN(Player.BLACK, false, 0x26C2), BLACK_KING(Player.BLACK, true, 0x26C3), WHITE_MAN(Player.WHITE, false, 0x26C0), WHITE_KING(Player.WHITE, true, 0x26C1);
 	
-	private char[] unicodeRep;
+	private final char[] unicodeRep;
+	public final Player owner;
+	public final boolean isKing;
 	
-	Piece(int uncodeCharPoint) {
+	Piece(Player owner, boolean isKing, int uncodeCharPoint) {
+		this.owner = owner;
+		this.isKing = isKing;
 		this.unicodeRep = Character.toChars(uncodeCharPoint);
 	}
 	

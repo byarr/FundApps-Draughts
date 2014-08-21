@@ -2,7 +2,11 @@ package com.brianyarr.fundapps.draughts;
 
 import static org.junit.Assert.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.junit.Test;
+
 import static org.hamcrest.CoreMatchers.*;
 
 public class GameStateTest {
@@ -64,5 +68,30 @@ public class GameStateTest {
 		}
 		
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testWhiteCantGoFirst() {
+		GameState initialState = new GameState();
+		initialState.doMove(new Move(Player.WHITE, new Position(5,0), new Position(4,1)));
+	}
+	
+	@Test
+	public void testFirstLegalBlackMoves() {
+		List<Move> legalMoves = new LinkedList<Move>();
+		legalMoves.add(new Move(Player.BLACK, new Position(2, 1), new Position(3, 0)));
+		legalMoves.add(new Move(Player.BLACK, new Position(2, 1), new Position(3, 2)));
+		legalMoves.add(new Move(Player.BLACK, new Position(2, 3), new Position(3, 2)));
+		legalMoves.add(new Move(Player.BLACK, new Position(2, 3), new Position(3, 4)));
+		legalMoves.add(new Move(Player.BLACK, new Position(2, 5), new Position(3, 4)));
+		legalMoves.add(new Move(Player.BLACK, new Position(2, 5), new Position(3, 6)));
+		legalMoves.add(new Move(Player.BLACK, new Position(2, 7), new Position(3, 6)));
+		
+		for (Move m : legalMoves) {
+			GameState initialState = new GameState();
+			initialState.doMove(m);
+			assertEquals(Player.WHITE, initialState.getNextPlayer());
+		}
+	}
+	
 
 }
